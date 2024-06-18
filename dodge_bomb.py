@@ -4,6 +4,15 @@ import pygame as pg
 
 
 WIDTH, HEIGHT = 1600, 900
+DXY = {
+    pg.K_UP: [0, -5],
+    pg.K_DOWN: [0, +5], 
+    pg.K_LEFT: [-5, 0],
+    pg.K_RIGHT: [+5, 0],
+}
+# 移動量辞書
+
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -21,17 +30,12 @@ def main():
             if event.type == pg.QUIT: 
                 return
         screen.blit(bg_img, [0, 0]) 
-
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
-        if key_lst[pg.K_UP]:
-            sum_mv[1] -= 5
-        if key_lst[pg.K_DOWN]:
-            sum_mv[1] += 5
-        if key_lst[pg.K_LEFT]:
-            sum_mv[0] -= 5
-        if key_lst[pg.K_RIGHT]:
-            sum_mv[0] += 5
+        for k, v in DXY.items():
+            if key_lst[k]:
+                sum_mv[0] += v[0]
+                sum_mv[1] += v[1]
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
         pg.display.update()
