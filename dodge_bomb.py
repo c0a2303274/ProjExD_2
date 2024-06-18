@@ -53,7 +53,8 @@ def main():
             vx *= -1
         if not bb_j[1]:
             vy *= -1
-        
+        if kk_rct.colliderect(bb):
+            return
         screen.blit(kk_img, kk_rct)
         screen.blit(bb_s, bb)
         pg.display.update()
