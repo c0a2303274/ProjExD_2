@@ -28,23 +28,28 @@ def main():
     kkgg_rct = kk_gg.get_rect()
     kkgg_rct.center = [5 * WIDTH / 7, HEIGHT / 2]
 
+
+    """
+    爆弾拡大のプログラム
+    """
     bb_t = []
     for r in range(1, 11):
         bb_img = pg.Surface((20*r, 20*r))
         pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
         bb_t.append(bb_img)
-    f = 0
-    # 接触のフラグ
+    f = 0  # 接触のフラグ
 
-    kk_l = kk_img
-    kk_lu = pg.transform.rotozoom(kk_l, -45.0, 1.0)
-    kk_r = pg.transform.flip(kk_img, True, False)
-    kk_rd = pg.transform.rotozoom(kk_r, -45.0, 1.0)
-    kk_d = pg.transform.rotozoom(kk_r, -90.0, 1.0)
-    kk_dl = pg.transform.rotozoom(kk_d, 45.0, 1.0)
-    kk_dl = pg.transform.rotozoom(kk_l, 45, 1.0)
-    kk_u = pg.transform.rotozoom(kk_img, -90.0, 1.0)
-    kk_ur  = pg.transform.rotozoom(kk_r, 45.0, 1.0)
+    """
+    回転したこうかとん
+    """
+    kk_l = kk_img  #左
+    kk_lu = pg.transform.rotozoom(kk_l, -45.0, 1.0)  #左上
+    kk_r = pg.transform.flip(kk_img, True, False)  #右
+    kk_rd = pg.transform.rotozoom(kk_r, -45.0, 1.0)  #右下
+    kk_d = pg.transform.rotozoom(kk_r, -90.0, 1.0)  #下
+    kk_dl = pg.transform.rotozoom(kk_l, 45, 1.0)  #左下
+    kk_u = pg.transform.rotozoom(kk_img, -90.0, 1.0)  #上
+    kk_ur  = pg.transform.rotozoom(kk_r, 45.0, 1.0)  #右上
     KK_ZOOM = {# 回転用の辞書
         str([0, -5]): kk_u,
         str([5, -5]): kk_ur,
@@ -56,7 +61,9 @@ def main():
         str([-5, -5]): kk_lu,
     }
 
-
+    """
+    細々とした設定
+    """
     bb_s = pg.Surface((20, 20))
     bb = pg.draw.circle(bb_s, (255, 0, 0), (10, 10), 10)
     bb.center = ri(0, WIDTH), ri(0, HEIGHT)
@@ -65,6 +72,7 @@ def main():
     vx = +5
     vy = +5
     tmr = 0
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -78,18 +86,22 @@ def main():
                 sum_mv[1] += v[1]
                 if not sum_mv == [0, 0]:
                     kk_img = KK_ZOOM[str(sum_mv)]
+
         kk_rct.move_ip(sum_mv)
         avx = sp_j(vx, tmr)
         avy = sp_j(vy, tmr)
         bb.move_ip(avx, avy)
+
         kk_j = D_Judg(kk_rct)
         if kk_j != [True, True]:
             kk_rct.move_ip((-sum_mv[0], -sum_mv[1]))
+
         bb_j = D_Judg(bb)
         if not bb_j[0]:
             vx *= -1
         if not bb_j[1]:
             vy *= -1
+
         if kk_rct.colliderect(bb):
             f = 1
         if f == 0:
