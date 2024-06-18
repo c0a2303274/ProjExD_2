@@ -23,6 +23,11 @@ def main():
     bg_img = pg.image.load("fig/pg_bg.jpg")    
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
     kk_rct = kk_img.get_rect()
+    bb_t = []
+    for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_t.append(bb_img)
 
     kk_l = kk_img
     kk_lu = pg.transform.rotozoom(kk_l, -45.0, 1.0)
@@ -47,7 +52,6 @@ def main():
 
     bb_s = pg.Surface((20, 20))
     bb = pg.draw.circle(bb_s, (255, 0, 0), (10, 10), 10)
-    bb_s.set_colorkey((0, 0, 0))
     bb.center = ri(0, WIDTH), ri(0, HEIGHT)
     kk_rct.center = WIDTH / 2, HEIGHT / 2
     clock = pg.time.Clock()
@@ -65,9 +69,12 @@ def main():
             if key_lst[k]:
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
-                kk_img = KK_ZOOM[str(sum_mv)]
+                if not sum_mv == [0, 0]:
+                    kk_img = KK_ZOOM[str(sum_mv)]
         kk_rct.move_ip(sum_mv)
-        bb.move_ip(+vx, +vy)
+        avx = sp_j(vx, tmr)
+        avy = sp_j(vy, tmr)
+        bb.move_ip(avx, avy)
         kk_j = D_Judg(kk_rct)
         if kk_j != [True, True]:
             kk_rct.move_ip((-sum_mv[0], -sum_mv[1]))
@@ -80,7 +87,8 @@ def main():
             return
         
         screen.blit(kk_img, kk_rct)
-        print(sum_mv)
+        bb_s = bb_t[min(tmr//500, 9)]
+        bb_s.set_colorkey((0, 0, 0))
         screen.blit(bb_s, bb)
         pg.display.update()
         tmr += 1
@@ -97,6 +105,10 @@ def D_Judg(rct:pg.Rect) -> tuple[bool, bool]:
     if rct.top < 0 or rct.bottom > HEIGHT:
         hight = False
     return [width, hight]
+
+def sp_j(d, tmr):
+    accs = [a for a in range(1, 11)]
+    return (d * accs[min(tmr//500, 9)])
 
 if __name__ == "__main__":
     pg.init()
