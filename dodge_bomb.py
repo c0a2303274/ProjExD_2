@@ -5,13 +5,12 @@ import pygame as pg
 
 
 WIDTH, HEIGHT = 900, 600
-DXY = {
+DXY = {# 移動量辞書
     pg.K_UP: [0, -5],
     pg.K_DOWN: [0, +5], 
     pg.K_LEFT: [-5, 0],
     pg.K_RIGHT: [+5, 0],
 }
-# 移動量辞書
 
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -46,7 +45,7 @@ def main():
     kk_dl = pg.transform.rotozoom(kk_l, 45, 1.0)
     kk_u = pg.transform.rotozoom(kk_img, -90.0, 1.0)
     kk_ur  = pg.transform.rotozoom(kk_r, 45.0, 1.0)
-    KK_ZOOM = {
+    KK_ZOOM = {# 回転用の辞書
         str([0, -5]): kk_u,
         str([5, -5]): kk_ur,
         str([5, 0]): kk_r,
@@ -56,7 +55,7 @@ def main():
         str([-5, 0]): kk_l, 
         str([-5, -5]): kk_lu,
     }
-# 回転用の辞書
+
 
     bb_s = pg.Surface((20, 20))
     bb = pg.draw.circle(bb_s, (255, 0, 0), (10, 10), 10)
