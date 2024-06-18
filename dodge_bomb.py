@@ -4,7 +4,7 @@ import sys
 import pygame as pg
 
 
-WIDTH, HEIGHT = 1600, 900
+WIDTH, HEIGHT = 900, 600
 DXY = {
     pg.K_UP: [0, -5],
     pg.K_DOWN: [0, +5], 
@@ -27,9 +27,11 @@ def main():
     bb = pg.draw.circle(bb_s, (255, 0, 0), (10, 10), 10)
     bb_s.set_colorkey((0, 0, 0))
     bb.center = ri(0, WIDTH), ri(0, HEIGHT)
-    kk_rct.center = 900, 400
+    kk_rct.center = WIDTH / 2, HEIGHT / 2
     clock = pg.time.Clock()
     tmr = 0
+    vx = +5
+    vy = +5
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -42,12 +44,29 @@ def main():
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
         kk_rct.move_ip(sum_mv)
+        bb.move_ip(+vx, +vy)
+        kk_j = D_Judg(kk_rct)
+        if kk_j != [True, True]:
+            kk_rct.move_ip((-sum_mv[0], -sum_mv[1]))
+        bb_j = D_Judg(bb)
+        if not bb_j[0]:
+            vx *= -1
+        if not bb_j[1]:
+            vy *= -1
+        
         screen.blit(kk_img, kk_rct)
         screen.blit(bb_s, bb)
         pg.display.update()
         tmr += 1
         clock.tick(50)
 
+def D_Judg(rct:pg.Rect):
+    width, hight = True, True
+    if rct.left < 0 or rct.right > WIDTH:
+        width = False
+    if rct.top < 0 or rct.bottom > HEIGHT:
+        hight = False
+    return [width, hight]
 
 if __name__ == "__main__":
     pg.init()
