@@ -23,11 +23,19 @@ def main():
     bg_img = pg.image.load("fig/pg_bg.jpg")    
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
     kk_rct = kk_img.get_rect()
+    kk_gg = pg.image.load("fig/8.png")
+    KKg_rct = kk_gg.get_rect()
+    KKg_rct.center = [2 * WIDTH / 7, HEIGHT / 2]
+    kkgg_rct = kk_gg.get_rect()
+    kkgg_rct.center = [5 * WIDTH / 7, HEIGHT / 2]
+
     bb_t = []
     for r in range(1, 11):
         bb_img = pg.Surface((20*r, 20*r))
         pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
         bb_t.append(bb_img)
+    f = 0
+    # 接触のフラグ
 
     kk_l = kk_img
     kk_lu = pg.transform.rotozoom(kk_l, -45.0, 1.0)
@@ -84,12 +92,25 @@ def main():
         if not bb_j[1]:
             vy *= -1
         if kk_rct.colliderect(bb):
-            return
-        
-        screen.blit(kk_img, kk_rct)
-        bb_s = bb_t[min(tmr//500, 9)]
-        bb_s.set_colorkey((0, 0, 0))
-        screen.blit(bb_s, bb)
+            f = 1
+        if f == 0:
+            screen.blit(kk_img, kk_rct)
+            bb_s = bb_t[min(tmr//500, 9)]
+            bb_s.set_colorkey((0, 0, 0))
+            screen.blit(bb_s, bb)
+        elif f == 1:
+            bl_s = pg.Surface((WIDTH, HEIGHT))
+            bl_rct = pg.draw.rect(bl_s, (0, 0, 0), (0, 0, WIDTH, HEIGHT))
+            bl_s.set_alpha(200)
+            screen.blit(bl_s, bl_rct)
+            gm = pg.font.Font(None, 80)
+            txt = gm.render("Game Over",True, (255, 255, 255))
+            txt_rct = txt.get_rect()
+            txt_rct.center = [WIDTH / 2, HEIGHT / 2]
+            screen.blit(txt, txt_rct)
+            screen.blit(kk_gg, KKg_rct)
+            screen.blit(kk_gg, kkgg_rct)
+
         pg.display.update()
         tmr += 1
         clock.tick(50)
